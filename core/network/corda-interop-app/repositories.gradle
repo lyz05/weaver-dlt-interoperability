@@ -4,5 +4,6 @@ repositories {
     maven { url 'https://repo1.maven.org/maven2' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://download.corda.net/maven/corda' }
+    maven { url "https://download.corda.net/maven/corda-dependencies" } // access to the patched Quasar and Caffeine version
     maven { url 'https://repo.gradle.org/gradle/libs-releases' }
 }

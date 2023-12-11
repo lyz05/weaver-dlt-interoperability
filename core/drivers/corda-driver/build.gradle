@@ -37,6 +37,7 @@ repositories {
     mavenLocal()
     maven { url 'https://repo1.maven.org/maven2' }
     maven { url 'https://download.corda.net/maven/corda' }
+    maven { url "https://download.corda.net/maven/corda-dependencies" } // access to the patched Quasar and Caffeine version
     if (file("$projectDir/./github.properties").exists()) {
         def styler = 'black red green yellow blue magenta cyan white'
                 .split().toList().withIndex(30)

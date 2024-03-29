@@ -105,3 +105,10 @@ Prominent features in our future roadmap are:
 # Former Members
 - https://github.com/ChanderG
 - https://github.com/dushyantbehl
+
+# 啓動網絡
+定位到`tests/network-setups/fabric/dev`
+```shell
+cd tests/network-setups/fabric/dev
+```
+根據此目錄中的README.md進一步操作

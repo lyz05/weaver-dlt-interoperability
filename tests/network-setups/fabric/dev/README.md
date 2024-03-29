@@ -42,14 +42,22 @@ Before starting fabric-testnet, we need to ensure the following prerequisite are
    a. Change directory to cloned repository: `cd network-setups/fabric/dev` . \
    b. Download Hyperledger Fabric docker images and platform binaries
 
-```shell
+fabric版本2.4以前的安裝方法如下，2.5版本的安裝方法參考Makefile文件中.fabric-setup：
+```shell fabric2.4
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- <fabric_version> <fabric-ca_version> <thirdparty_version>
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.1.0 1.4.7 0.4.20 -s
+```
+```shell fabric2.5
+make .fabric-setup
+```
+運行結果：
+```
+
 ```
 
 Note: Above curl command will create a bin folder in `network-setups/fabric/dev` folder and binaries will be placed in `bin` folder.
 
-### Setting up a fabric-testnet
+### 搭建fabric測試網絡
 
 1. Ensure your docker engine is up and running, and change directory to `network-setups/fabric/dev`
 2. To start network1, run the script `./network.sh up createChannel -nw network1`
@@ -58,7 +66,7 @@ Note: Above curl command will create a bin folder in `network-setups/fabric/dev`
 5. Run `./network.sh down -nw network1` to stop the network1.
 6. Run `./network.sh down -nw network2` to stop the network2.
 
-### Deploy chaincode
+### 部署鏈碼
 
 To Deploy the chaincode, follow the below steps.
 

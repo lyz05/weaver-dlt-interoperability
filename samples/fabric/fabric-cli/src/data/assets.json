@@ -1,34 +1,34 @@
 {
-  "a03": {
+  "phone03": {
     "assetType": "bond01",
-    "id": "a03",
+    "id": "phone03",
     "owner": "alice",
-    "issuer": "treasury",
-    "facevalue": "500",
+    "issuer": "phone company",
+    "facevalue": "1500",
     "manufacturedate": "01 Jan 45 00:00 MST"
   },
-  "a04": {
+  "phone04": {
     "assetType": "bond01",
-    "id": "a04",
+    "id": "phone04",
     "owner": "bob",
-    "issuer": "treasury",
-    "facevalue": "700",
+    "issuer": "phone company",
+    "facevalue": "1500",
     "manufacturedate": "01 Jul 45 00:00 MST"
   },
-  "a05": {
+  "phone05": {
     "assetType": "bond01",
-    "id": "a05",
+    "id": "phone05",
     "owner": "alice",
-    "issuer": "treasury",
-    "facevalue": "300",
+    "issuer": "phone company",
+    "facevalue": "4500",
     "manufacturedate": "05 May 47 00:00 MST"
   },
-  "a06": {
+  "phone06": {
     "assetType": "bond01",
-    "id": "a06",
+    "id": "phone06",
     "owner": "bob",
-    "issuer": "treasury",
-    "facevalue": "300",
+    "issuer": "phone company",
+    "facevalue": "4500",
     "manufacturedate": "05 Mar 47 00:00 MST"
   }
 }

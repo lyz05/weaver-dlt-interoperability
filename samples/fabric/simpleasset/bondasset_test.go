@@ -61,7 +61,7 @@ func TestCreateAsset(t *testing.T) {
 
 	chaincodeStub.GetStateReturns([]byte{}, nil)
 	err = simpleAsset.CreateAsset(transactionContext, defaultAssetType, defaultAssetId, defaultAssetOwner, "", 0, "")
-	require.EqualError(t, err, "the asset asset1 already exists")
+	require.EqualError(t, err, "the bond asset asset1 早已存在")
 
 	chaincodeStub.GetStateReturns(nil, fmt.Errorf("unable to retrieve asset"))
 	err = simpleAsset.CreateAsset(transactionContext, defaultAssetType, defaultAssetId, defaultAssetOwner, "", 0, "")
@@ -114,7 +114,7 @@ func TestUpdateFaceValue(t *testing.T) {
 	require.EqualError(t, err, "failed to read asset record from world state: unable to retrieve asset")
 }
 
-func TestUpdateMaturityDate(t *testing.T) {
+func TestUpdateManufactureDate(t *testing.T) {
 	transactionContext, chaincodeStub := wtest.PrepMockStub()
 	simpleAsset := sa.SmartContract{}
 	simpleAsset.ConfigureInterop("interopcc")
@@ -124,15 +124,15 @@ func TestUpdateMaturityDate(t *testing.T) {
 	require.NoError(t, err)
 
 	chaincodeStub.GetStateReturns(bytes, nil)
-	err = simpleAsset.UpdateMaturityDate(transactionContext, "", "", time.Now())
+	err = simpleAsset.UpdateManufactureDate(transactionContext, "", "", time.Now())
 	require.NoError(t, err)
 
 	chaincodeStub.GetStateReturns(nil, nil)
-	err = simpleAsset.UpdateMaturityDate(transactionContext, "", "asset1", time.Now())
+	err = simpleAsset.UpdateManufactureDate(transactionContext, "", "asset1", time.Now())
 	require.EqualError(t, err, "the asset asset1 does not exist")
 
 	chaincodeStub.GetStateReturns(nil, fmt.Errorf("unable to retrieve asset"))
-	err = simpleAsset.UpdateMaturityDate(transactionContext, "", "asset1", time.Now())
+	err = simpleAsset.UpdateManufactureDate(transactionContext, "", "asset1", time.Now())
 	require.EqualError(t, err, "failed to read asset record from world state: unable to retrieve asset")
 }
 

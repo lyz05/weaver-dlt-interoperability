@@ -129,9 +129,11 @@ remove-network2:
 
 .PHONY: clean
 clean:	remove
-	+docker system prune -f || true
+	+docker stop $$(docker ps -aq) || true
+	+docker system prune -a -f || true
+	+docker volume prune -a -f || true
 	+rm -rf config || true
-	+chmod -R 755 ../shared/chaincode/interop
+	+[ -d "../shared/chaincode/interop" ] && chmod -R 755 ../shared/chaincode/interop || true
 	+rm -rf ../shared/chaincode/*
 
 .PHONY: clean-all	

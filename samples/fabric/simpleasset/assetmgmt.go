@@ -16,6 +16,8 @@ import (
 )
 
 // asset specific checks (ideally an asset in a different application might implement checks specific to that asset)
+// BondAssetSpecificChecks 执行债券资产锁定前的特定检查。
+// 它验证了资产是否存在、是否属于锁定者，以及资产的到期时间是否符合锁定期限。
 func (s *SmartContract) BondAssetSpecificChecks(ctx contractapi.TransactionContextInterface, assetType, id string, lockInfoSerializedProto64 string) error {
 
 	lockInfo, err := s.amc.ValidateAndExtractLockInfo(lockInfoSerializedProto64)
@@ -35,16 +37,12 @@ func (s *SmartContract) BondAssetSpecificChecks(ctx contractapi.TransactionConte
 	log.Infof("bond: %+v", *bond)
 	log.Infof("lockInfoHTLC: %+v", *lockInfoHTLC)
 
-	// Check if asset doesn't mature before locking period
-	if uint64(bond.MaturityDate.Unix()) < lockInfoHTLC.ExpiryTimeSecs {
-		return logThenErrorf("cannot lock bond asset as it will mature before locking period")
-	}
-
 	return nil
 }
 
 // Ledger transaction (invocation) functions
-
+// LockAsset 锁定一个非同质化资产（如债券或其他特定类型的资产）。
+// 它首先对资产进行特定的检查，然后调用资产管理组件进行锁定，并记录必要的信息以供将来的解锁/认领使用。
 func (s *SmartContract) LockAsset(ctx contractapi.TransactionContextInterface, assetExchangeAgreementSerializedProto64 string, lockInfoSerializedProto64 string) (string, error) {
 
 	assetAgreement, err := s.amc.ValidateAndExtractAssetAgreement(assetExchangeAgreementSerializedProto64)
@@ -70,6 +68,8 @@ func (s *SmartContract) LockAsset(ctx contractapi.TransactionContextInterface, a
 	return contractId, nil
 }
 
+// LockFungibleAsset 锁定同质化资产（例如代币）。
+// 它确保锁定者拥有足够数量的代币，然后进行锁定，最后从锁定者的账户中扣除相应数量的代币。
 func (s *SmartContract) LockFungibleAsset(ctx contractapi.TransactionContextInterface, fungibleAssetExchangeAgreementSerializedProto64 string, lockInfoSerializedProto64 string) (string, error) {
 
 	assetAgreement, err := s.amc.ValidateAndExtractFungibleAssetAgreement(fungibleAssetExchangeAgreementSerializedProto64)
@@ -115,6 +115,7 @@ func (s *SmartContract) LockFungibleAsset(ctx contractapi.TransactionContextInte
 }
 
 // Check whether this asset has been locked by anyone (not just by caller)
+// IsAssetLocked 查询一个资产是否已被锁定。
 func (s *SmartContract) IsAssetLocked(ctx contractapi.TransactionContextInterface, assetAgreementSerializedProto64 string) (bool, error) {
 	return s.amc.IsAssetLocked(ctx, assetAgreementSerializedProto64)
 }
@@ -129,6 +130,8 @@ func (s *SmartContract) IsFungibleAssetLocked(ctx contractapi.TransactionContext
 	return s.amc.IsFungibleAssetLocked(ctx, contractId)
 }
 
+// ClaimAsset 允许资产的预定接收者认领一个已被锁定的资产。
+// 认领成功后，资产所有权将转移到认领者。
 func (s *SmartContract) ClaimAsset(ctx contractapi.TransactionContextInterface, assetAgreementSerializedProto64 string, claimInfoSerializedProto64 string) (bool, error) {
 	assetAgreement, err := s.amc.ValidateAndExtractAssetAgreement(assetAgreementSerializedProto64)
 	if err != nil {
@@ -244,6 +247,8 @@ func (s *SmartContract) ClaimFungibleAsset(ctx contractapi.TransactionContextInt
 	}
 }
 
+// UnlockAsset 解锁一个非同质化资产，使其再次可用。
+// 这通常在锁定期结束且资产未被认领时发生。
 func (s *SmartContract) UnlockAsset(ctx contractapi.TransactionContextInterface, assetAgreementSerializedProto64 string) (bool, error) {
 	assetAgreement, err := s.amc.ValidateAndExtractAssetAgreement(assetAgreementSerializedProto64)
 	if err != nil {

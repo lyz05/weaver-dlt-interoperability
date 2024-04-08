@@ -14,6 +14,7 @@ import (
 	wtest "github.com/hyperledger-labs/weaver-dlt-interoperability/core/network/fabric-interop-cc/libs/testutils"
 )
 
+// 测试初始化Token资产账本
 func TestInitTokenAssetLedger(t *testing.T) {
 	transactionContext, chaincodeStub := wtest.PrepMockStub()
 	simpleToken := sa.SmartContract{}
@@ -27,6 +28,7 @@ func TestInitTokenAssetLedger(t *testing.T) {
 	require.EqualError(t, err, "failed to create token asset type token1. failed inserting key")
 }
 
+// 测试创建token资产
 func TestCreateTokenAssetType(t *testing.T) {
 	transactionContext, chaincodeStub := wtest.PrepMockStub()
 	simpleToken := sa.SmartContract{}
@@ -44,7 +46,7 @@ func TestCreateTokenAssetType(t *testing.T) {
 	// Check if tokenAssetType already exists
 	chaincodeStub.GetStateReturns([]byte{}, nil)
 	res, err = simpleToken.CreateTokenAssetType(transactionContext, "token1", "", 0)
-	require.EqualError(t, err, "the token asset type token1 already exists.")
+	require.EqualError(t, err, "the token asset type token1 早已存在.")
 	require.Equal(t, res, false)
 
 	// Check if PutState fails

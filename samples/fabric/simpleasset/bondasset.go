@@ -17,8 +17,9 @@ type BondAsset struct {
 	ID            string      `json:"id"`
 	Owner         string      `json:"owner"`
 	Issuer        string      `json:"issuer"`
+	// IssuerName    string      `json:"issuername"`
 	FaceValue     int         `json:"facevalue"`
-	MaturityDate  time.Time   `json:"maturitydate"`
+	ManufactureDate  time.Time   `json:"manufacturedate"`
 }
 
 func getBondAssetKey(assetType string, assetId string) string {
@@ -46,9 +47,9 @@ func getBondAsset(ctx contractapi.TransactionContextInterface, assetType, id str
 func (s *SmartContract) InitBondAssetLedger(ctx contractapi.TransactionContextInterface) error {
 	assets := []BondAsset{
 		{Type: "t1", ID: "a01", Issuer: "Treasury" , Owner: "", FaceValue: 300,
-			 MaturityDate: time.Date(2022, time.April, 1, 12, 0, 0, 0, time.UTC)},
+			 ManufactureDate: time.Date(2022, time.April, 1, 12, 0, 0, 0, time.UTC)},
 			 {Type: "t1", ID: "a02", Issuer: "Treasury" , Owner: "", FaceValue: 400,
-			 MaturityDate: time.Date(2022, time.July, 1, 12, 0, 0, 0, time.UTC)},
+			 ManufactureDate: time.Date(2022, time.July, 1, 12, 0, 0, 0, time.UTC)},
 	}
 
 	for _, asset := range assets {
@@ -67,7 +68,7 @@ func (s *SmartContract) InitBondAssetLedger(ctx contractapi.TransactionContextIn
 }
 
 // CreateAsset issues a new asset to the world state with given details.
-func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, assetType, id, owner, issuer string, faceValue int, maturityDate string) error {
+func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface, assetType, id, owner, issuer string, faceValue int, manufactureDate string) error {
 	if assetType == "" {
 		return fmt.Errorf("Asset type cannot be blank")
 	}
@@ -82,10 +83,10 @@ func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface,
 		return err
 	}
 	if exists {
-		return fmt.Errorf("the asset %s already exists", id)
+		return fmt.Errorf("the bond asset %s 早已存在", id)
 	}
 
-	md_time, err := time.Parse(time.RFC822, maturityDate)
+	md_time, err := time.Parse(time.RFC822, manufactureDate)
 	if err != nil {
 		return fmt.Errorf("maturity date provided is not in correct format, please use this format: %s", time.RFC822)
 	}
@@ -100,7 +101,7 @@ func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface,
 		Owner: owner,
 		Issuer: issuer,
 		FaceValue: faceValue,
-		MaturityDate: md_time,
+		ManufactureDate: md_time,
 	}
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
@@ -223,7 +224,7 @@ func (s *SmartContract) IsAssetReleased(ctx contractapi.TransactionContextInterf
 		return false, err
 	}
 	currDate := time.Now()
-	if (currDate.After(asset.MaturityDate)) {
+	if (currDate.After(asset.ManufactureDate)) {
 		return true, nil
 	}
 
@@ -247,15 +248,15 @@ func (s *SmartContract) UpdateOwner(ctx contractapi.TransactionContextInterface,
 	return ctx.GetStub().PutState(getBondAssetKey(assetType, id), assetJSON)
 }
 
-// UpdateMaturityDate sets the maturity date of the asset to an updated date as passed in the parameters.
-func (s *SmartContract) UpdateMaturityDate(ctx contractapi.TransactionContextInterface, assetType, id string, newMaturityDate time.Time) error {
+// UpdateManufactureDate sets the maturity date of the asset to an updated date as passed in the parameters.
+func (s *SmartContract) UpdateManufactureDate(ctx contractapi.TransactionContextInterface, assetType, id string, newManufactureDate time.Time) error {
 	// Read asset (which internally checks access if it is free to modified)
 	asset, err := s.ReadAsset(ctx, assetType, id)
 	if err != nil {
 		return err
 	}
 
-	asset.MaturityDate = newMaturityDate
+	asset.ManufactureDate = newManufactureDate
 	assetJSON, err := json.Marshal(asset)
 	if err != nil {
 		return err

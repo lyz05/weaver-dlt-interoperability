@@ -73,7 +73,7 @@ func TestExchangeBondAssetWithTokenAsset(t *testing.T) {
 	bondIssuer := "network1"
 	bondFaceValue := 1
 	currentTime := time.Now()
-	bondMaturityDate := currentTime.Add(time.Hour * 24)  // maturity date is 1 day after current time
+	bondManufactureDate := currentTime.Add(time.Hour * 24)  // maturity date is 1 day after current time //TODO: 这里要修改，减去一个小时
 
 	tokenType := "cbdc"
 	tokenIssuer := "network2"
@@ -86,7 +86,7 @@ func TestExchangeBondAssetWithTokenAsset(t *testing.T) {
 	// Create bond asset
 	// let ctx.GetStub().GetState() return that the bond asset didn't exist before
 	chaincodeStub.GetStateReturnsOnCall(0, nil, nil)
-	err := sc.CreateAsset(ctx, bondType, bondId, bondLocker, bondIssuer, bondFaceValue, bondMaturityDate.Format(time.RFC822))
+	err := sc.CreateAsset(ctx, bondType, bondId, bondLocker, bondIssuer, bondFaceValue, bondManufactureDate.Format(time.RFC822))
 	require.NoError(t, err)
 
 
@@ -142,7 +142,7 @@ func TestExchangeBondAssetWithTokenAsset(t *testing.T) {
 		Owner: bondLocker,
 		Issuer: bondIssuer,
 		FaceValue: bondFaceValue,
-		MaturityDate: bondMaturityDate,
+		ManufactureDate: bondManufactureDate,
 	}
 	bondAssetBytes, err := json.Marshal(bondAsset)
 	chaincodeStub.GetCreatorReturnsOnCall(0, []byte(getCreatorInContext("locker")), nil)

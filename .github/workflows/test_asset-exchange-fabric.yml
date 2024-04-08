@@ -42,7 +42,7 @@ jobs:
       
       # FABRIC NETWORK
       - name: Start Fabric Network
-        run: make start-interop CHAINCODE_NAME=simpleasset PROFILE="2-nodes"
+        run: make start-interop-local CHAINCODE_NAME=simpleasset PROFILE="2-nodes"
         working-directory: tests/network-setups/fabric/dev
         
       # FABRIC CLI
@@ -137,7 +137,8 @@ jobs:
         run: make build-local
         working-directory: samples/fabric/fabric-cli
         
-      # FABRIC NETWORK
+      # 網絡初始化，記得清理舊網絡環境make clean，快速啓動網絡代碼
+      # time make start-local CHAINCODE_NAME=simpleasset
       - name: Start Fabric Network
         run: make start-interop-local CHAINCODE_NAME=simpleasset
         working-directory: tests/network-setups/fabric/dev
@@ -158,6 +159,7 @@ jobs:
           cat .env
         working-directory: samples/fabric/fabric-cli
         
+      # 賬本初始化
       - name: Fabric CLI Init
         run: ./scripts/initAsset.sh
         working-directory: samples/fabric/fabric-cli

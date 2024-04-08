@@ -7,17 +7,20 @@ import (
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
+// Token 资产类型，Issuer发行人，Value代币当前价值
 type TokenAssetType struct {
 	Issuer          string              `json:"issuer"`
 	Value           int                 `json:"value"`
 }
+// 定义代币钱包
 type TokenWallet struct {
 	WalletMap       map[string]uint64   `json:"walletlist"`
 }
 
 
-// InitTokenAssetLedger adds a base set of assets to the ledger
+// 在账本中添加一组基础资产
 func (s *SmartContract) InitTokenAssetLedger(ctx contractapi.TransactionContextInterface) error {
+	// 中央银行发行value：1单位的token1
 	_, err := s.CreateTokenAssetType(ctx, "token1", "CentralBank", 1)
 	if err != nil {
 		return err
@@ -25,7 +28,7 @@ func (s *SmartContract) InitTokenAssetLedger(ctx contractapi.TransactionContextI
 	return err
 }
 
-// CreateTokenAssetType issues a new token asset type to the world state with given details.
+// 在世界状态中创建一个新的代币资产类型
 func (s *SmartContract) CreateTokenAssetType(ctx contractapi.TransactionContextInterface, tokenAssetType string, issuer string, value int) (bool, error) {
 	if tokenAssetType == "" {
 		return false, fmt.Errorf("Token asset type cannot be blank")
@@ -35,7 +38,7 @@ func (s *SmartContract) CreateTokenAssetType(ctx contractapi.TransactionContextI
 		return false, err
 	}
 	if exists {
-		return false, fmt.Errorf("the token asset type %s already exists.", tokenAssetType)
+		return false, fmt.Errorf("the token asset type %s 早已存在.", tokenAssetType)
 	}
 
 	asset := TokenAssetType{
@@ -55,7 +58,7 @@ func (s *SmartContract) CreateTokenAssetType(ctx contractapi.TransactionContextI
 	return true, nil
 }
 
-// ReadTokenAssetType returns the token asset type stored in the world state with given type.
+// ReadTokenAssetType 返回存储在世界状态中的给定类型的代币资产类型
 func (s *SmartContract) ReadTokenAssetType(ctx contractapi.TransactionContextInterface, tokenAssetType string) (*TokenAssetType, error) {
 	id := getTokenAssetTypeId(tokenAssetType)
 	assetJSON, err := ctx.GetStub().GetState(id)
@@ -75,7 +78,7 @@ func (s *SmartContract) ReadTokenAssetType(ctx contractapi.TransactionContextInt
 	return &fat, nil
 }
 
-// DeleteTokenAssetType deletes an given token asset type from the world state.
+// DeleteTokenAssetType 从世界状态中删除给定的代币资产类型
 func (s *SmartContract) DeleteTokenAssetType(ctx contractapi.TransactionContextInterface, tokenAssetType string) error {
 	exists, err := s.TokenAssetTypeExists(ctx, tokenAssetType)
 	if err != nil {
